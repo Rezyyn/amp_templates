@@ -1,0 +1,194 @@
+[
+  {
+    "DisplayName": "Server Name",
+    "Category": "Minecraft (CurseForge):server",
+    "Subcategory": "General",
+    "Description": "Name shown in the server list.",
+    "Keywords": "server,name",
+    "FieldName": "$DisplayName",
+    "InputType": "text",
+    "ParamFieldName": "$DisplayName",
+    "DefaultValue": "AMP CF Minecraft Server",
+    "EnumValues": {}
+  },
+  {
+    "DisplayName": "Max Players",
+    "Category": "Minecraft (CurseForge):server",
+    "Subcategory": "General",
+    "Description": "Maximum concurrent players.",
+    "Keywords": "players,max",
+    "FieldName": "$MaxUsers",
+    "InputType": "number",
+    "MinValue": "1",
+    "ParamFieldName": "$MaxUsers",
+    "DefaultValue": "20",
+    "Placeholder": "20",
+    "Suffix": "players",
+    "EnumValues": {}
+  },
+  {
+    "DisplayName": "Accept EULA",
+    "Category": "Minecraft (CurseForge):server",
+    "Subcategory": "General",
+    "Description": "Set to true to accept Mojang EULA.",
+    "Keywords": "eula",
+    "FieldName": "EULA",
+    "InputType": "checkbox",
+    "ParamFieldName": "EULA",
+    "DefaultValue": "true",
+    "EnumValues": { "False": "false", "True": "true" }
+  },
+
+  {
+    "DisplayName": "Min Memory",
+    "Category": "Java",
+    "Subcategory": "Runtime",
+    "Description": "JVM minimum heap.",
+    "Keywords": "java,ram",
+    "FieldName": "MinMemory",
+    "InputType": "text",
+    "ParamFieldName": "MinMemory",
+    "DefaultValue": "4G",
+    "EnumValues": {}
+  },
+  {
+    "DisplayName": "Max Memory",
+    "Category": "Java",
+    "Subcategory": "Runtime",
+    "Description": "JVM maximum heap.",
+    "Keywords": "java,ram",
+    "FieldName": "MaxMemory",
+    "InputType": "text",
+    "ParamFieldName": "MaxMemory",
+    "DefaultValue": "8G",
+    "EnumValues": {}
+  },
+
+  {
+    "DisplayName": "CurseForge API Key",
+    "Category": "CurseForge",
+    "Subcategory": "Auth",
+    "Description": "Your CF API key. Stored in env and used in x-api-key header.",
+    "Keywords": "curseforge,api,key",
+    "FieldName": "CF_API_Key",
+    "InputType": "password",
+    "ParamFieldName": "CF_API_Key",
+    "DefaultValue": "",
+    "EnumValues": {}
+  },
+  {
+    "DisplayName": "Minecraft Version",
+    "Category": "CurseForge",
+    "Subcategory": "Selection",
+    "Description": "Filters mods and loader compatibility (e.g. 1.20.1). If left blank and importing a modpack, the modpack's version is used.",
+    "Keywords": "minecraft,version",
+    "FieldName": "MCVersion",
+    "InputType": "text",
+    "ParamFieldName": "MCVersion",
+    "DefaultValue": "",
+    "Placeholder": "1.20.1",
+    "EnumValues": {}
+  },
+  {
+    "DisplayName": "Mod Loader",
+    "Category": "CurseForge",
+    "Subcategory": "Selection",
+    "Description": "Select the loader (modpack import can override if blank).",
+    "Keywords": "forge,fabric,neoforge",
+    "FieldName": "ModLoader",
+    "InputType": "enum",
+    "ParamFieldName": "ModLoader",
+    "DefaultValue": "forge",
+    "EnumValues": {
+      "forge": "Forge",
+      "neoforge": "NeoForge",
+      "fabric": "Fabric"
+    }
+  },
+
+  {
+    "DisplayName": "Search Query",
+    "Category": "CurseForge",
+    "Subcategory": "Search",
+    "Description": "Type a term (e.g. 'journeymap, sodium'). Click 'Run Search' user action to generate results file.",
+    "Keywords": "search,mods",
+    "FieldName": "CF_SearchQuery",
+    "InputType": "text",
+    "ParamFieldName": "CF_SearchQuery",
+    "DefaultValue": "",
+    "EnumValues": {}
+  },
+  {
+    "DisplayName": "Mod Project IDs (CSV)",
+    "Category": "CurseForge",
+    "Subcategory": "Install",
+    "Description": "Comma-separated CurseForge Project IDs to install (latest compatible file will be chosen).",
+    "Keywords": "mods,projects,ids",
+    "FieldName": "CF_ModProjectIDs",
+    "InputType": "Textarea",
+    "ParamFieldName": "CF_ModProjectIDs",
+    "DefaultValue": "",
+    "EnumValues": {}
+  },
+  {
+    "DisplayName": "Explicit File IDs (CSV of projectId:fileId)",
+    "Category": "CurseForge",
+    "Subcategory": "Install",
+    "Description": "Optionally pin exact files. Format: 306612:4631291, 238222:4701234",
+    "Keywords": "files,ids,pin",
+    "FieldName": "CF_ModFileIDs",
+    "InputType": "Textarea",
+    "ParamFieldName": "CF_ModFileIDs",
+    "DefaultValue": "",
+    "EnumValues": {}
+  },
+
+  {
+    "DisplayName": "Enable Modpack Import",
+    "Category": "CurseForge:Modpack",
+    "Subcategory": "Import",
+    "Description": "Enable to import a CurseForge modpack (URL or ProjectID+FileID).",
+    "Keywords": "modpack,import",
+    "FieldName": "CF_ModpackEnable",
+    "InputType": "checkbox",
+    "ParamFieldName": "CF_ModpackEnable",
+    "DefaultValue": "false",
+    "EnumValues": { "False": "false", "True": "true" }
+  },
+  {
+    "DisplayName": "Modpack URL (optional)",
+    "Category": "CurseForge:Modpack",
+    "Subcategory": "Import",
+    "Description": "Direct CF file URL for the modpack (preferred). If blank, provide ProjectID + FileID.",
+    "Keywords": "modpack,url",
+    "FieldName": "CF_ModpackURL",
+    "InputType": "text",
+    "ParamFieldName": "CF_ModpackURL",
+    "DefaultValue": "",
+    "EnumValues": {}
+  },
+  {
+    "DisplayName": "Modpack Project ID",
+    "Category": "CurseForge:Modpack",
+    "Subcategory": "Import",
+    "Description": "CurseForge Project ID for the modpack (if no URL).",
+    "Keywords": "modpack,project,id",
+    "FieldName": "CF_ModpackProjectID",
+    "InputType": "text",
+    "ParamFieldName": "CF_ModpackProjectID",
+    "DefaultValue": "",
+    "EnumValues": {}
+  },
+  {
+    "DisplayName": "Modpack File ID",
+    "Category": "CurseForge:Modpack",
+    "Subcategory": "Import",
+    "Description": "CurseForge File ID for the modpack (if no URL).",
+    "Keywords": "modpack,file,id",
+    "FieldName": "CF_ModpackFileID",
+    "InputType": "text",
+    "ParamFieldName": "CF_ModpackFileID",
+    "DefaultValue": "",
+    "EnumValues": {}
+  }
+]
