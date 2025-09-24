@@ -1,0 +1,166 @@
+Meta.DisplayName=Minecraft (CurseForge)
+Meta.Description=Java server with CurseForge-powered mod install (search, select, modpack import)
+Meta.OS=Windows, Linux
+Meta.AarchSupport=Unknown
+Meta.Arch=x86_64
+Meta.Author=Rezyn/0kk.sh
+Meta.URL=https://www.curseforge.com/minecraft
+Meta.DisplayImageSource=internal:MinecraftJava
+Meta.EndpointURIFormat={ip}:{GenericModule.App.Ports.$ServerPort}
+Meta.ConfigManifest=minecraft-cfconfig.json
+Meta.MetaConfigManifest=
+Meta.ConfigRoot=minecraft-cf.kvp
+Meta.MinAMPVersion=2.5.0.10
+Meta.SpecificDockerImage=
+Meta.DockerRequired=False
+Meta.DockerBaseReadOnly=False
+Meta.ContainerPolicy=Supported
+Meta.ExtraSetupStepsURI=
+Meta.Prerequisites=[]
+Meta.ExtraContainerPackages=[]
+Meta.ConfigReleaseState=Beta
+Meta.NoCommercialUsage=False
+Meta.ConfigVersion=2
+Meta.ReleaseNotes=Adds CurseForge Modpack import (URL or ProjectID:FileID), manifest parsing, overrides support.
+Meta.BreakingReleaseNotes=
+Meta.AppConfigId=2b0d0df9-0cf5-4d2d-b2a3-2fa1d5b0cfaa
+Meta.ImportableExtensions=[]
+
+App.DisplayName=Minecraft (CurseForge)
+App.RootDir=./Minecraft/
+App.BaseDirectory=./Minecraft/
+App.WorkingDir=./Minecraft/
+App.ExecutableWin=java.exe
+App.ExecutableLinux=java
+App.LinuxCommandLineArgs=-Xms{$MinMemory} -Xmx{$MaxMemory} -jar server.jar nogui
+App.WindowsCommandLineArgs=-Xms{$MinMemory} -Xmx{$MaxMemory} -jar server.jar nogui
+App.CommandLineArgs=
+App.UseLinuxIOREDIR=False
+App.AppSettings={}
+App.EnvironmentVariables={"CF_API_KEY":"{$CF_API_Key}","CF_BASE_URL":"https://api.curseforge.com","JAVA_HOME":"","CF_GAME_ID":"432"}
+App.CommandLineParameterFormat=-{0}={1}
+App.CommandLineParameterDelimiter= 
+App.ExitMethod=String
+App.ExitTimeout=30
+App.ExitString=stop
+App.ExitFile=app_exit.lck
+App.HasWriteableConsole=True
+App.HasReadableConsole=True
+App.UDPLogger=False
+App.SupportsLiveSettingsChanges=False
+App.LiveSettingChangeCommandFormat=set {0} "{1}"
+App.ForceIPBinding=False
+App.SupportsIPv6=True
+App.ApplicationIPBinding=0.0.0.0
+
+App.Ports=[{"Name":"ServerPort","Description":"Minecraft Java port","Port":25565,"Protocol":"TCP","IsPrimary":true}]
+App.AdminPortRef=0
+App.PrimaryApplicationPortRef=ServerPort
+App.UniversalSleepApplicationUDPPortRef=0
+App.UniversalSleepSteamQueryPortRef=0
+App.MaxUsers={$MaxUsers}
+App.UseRandomAdminPassword=False
+App.PersistRandomPassword=False
+App.RemoteAdminPassword=Password123
+App.AdminMethod=STDIO
+App.IgnoreSTDOUTAfterRCON=False
+App.AdminLoginTransform=None
+App.LoginTransformPrefix=
+App.RCONConnectDelaySeconds=5
+App.RCONConnectRetrySeconds=5
+App.RCONHeartbeatMinutes=0
+App.RCONHeartbeatCommand=ping
+App.TelnetLoginFormat={0}
+
+App.UpdateSources=[]
+
+; --- Start flow: EULA -> (optional) Modpack -> Search (optional) -> Install ---
+App.PreStartStages=[
+  {"Name":"EnsureEULA","Type":"Shell","Platform":"Any","ScriptInline":"echo eula={$EULA} > eula.txt"},
+  {"Name":"CFModpack","Type":"Shell","Platform":"Any","ScriptInline":"{$CF_MODPACK_SCRIPT}"},
+  {"Name":"CFSearch","Type":"Shell","Platform":"Any","ScriptInline":"{$CF_SEARCH_SCRIPT}"},
+  {"Name":"CFInstall","Type":"Shell","Platform":"Any","ScriptInline":"{$CF_INSTALL_SCRIPT}"}
+]
+
+App.UserActions=[
+  {
+    "Name":"Run Search",
+    "Description":"Search CurseForge for mods by name (results saved to ./.cf-search-results.json).",
+    "Category":"CurseForge",
+    "Dangerous":false,
+    "Inputs":[
+      {"Name":"Query","Default":"{$CF_SearchQuery}"},
+      {"Name":"GameVersion","Default":"{$MCVersion}"},
+      {"Name":"Loader","Default":"{$ModLoader}"}
+    ],
+    "Action":{"Type":"Shell","ScriptInline":"{$CF_SEARCH_SCRIPT}"}
+  },
+  {
+    "Name":"Import Modpack",
+    "Description":"Download & import a CurseForge modpack (by URL or ProjectID+FileID). Parses manifest, sets version/loader, installs mods and overrides.",
+    "Category":"CurseForge",
+    "Dangerous":false,
+    "Inputs":[
+      {"Name":"ModpackURL","Default":"{$CF_ModpackURL}"},
+      {"Name":"ProjectID","Default":"{$CF_ModpackProjectID}"},
+      {"Name":"FileID","Default":"{$CF_ModpackFileID}"}
+    ],
+    "Action":{"Type":"Shell","ScriptInline":"{$CF_MODPACK_SCRIPT}"}
+  }
+]
+
+App.ForceUpdate=False
+App.Compatibility=None
+App.SteamUpdateAnonymousLogin=True
+App.RapidStartup=False
+App.SmartExcludeExemptions=["*.cfg","*.conf","*.config","*.ini","*.json","*.xml","*.properties","*.kvp","*.yml","*.yaml","*.toml","*.lua","*.txt","*.sh","*.ps1","*.jar","overrides/**","mods/**"]
+App.SmartExcludeSupported=False
+App.DumpFullChildProcessTree=False
+App.SupportsUniversalSleep=False
+App.WakeupMode=Any
+App.ApplicationReadyMode=RegexMatch
+App.TemplateMatchRegex={{(!?(?<Platform>Linux|Windows|All):)?(?<Value>\$?[\w]+)}}
+Console.FilterMatchRegex=\e\[(\d+;)*(\d+)?[ABCDHJKfmsu]|\e\[?[?\>\=\da-z]+
+Console.FilterMatchReplacement=
+Console.ThrowawayMessageRegex=^$
+Console.AppReadyRegex=^\[.+\] \[Server thread\/INFO\]: Done \(\d+\.\d+s\)! For help, type \"help\"\.$
+Console.UserJoinRegex=^\[.+\] \[Server thread\/INFO\]: (?<username>.+) joined the game$
+Console.UserLeaveRegex=^\[.+\] \[Server thread\/INFO\]: (?<username>.+) left the game$
+Console.UserChatRegex=^$
+Console.UpdateAvailableRegex=
+Console.MetricsRegex=
+Console.SuppressLogAtStart=False
+Console.ActivateLogRegex=
+Console.UserActions={}
+
+Limits.SleepMode=False
+Limits.SleepOnStart=False
+Limits.SleepDelayMinutes=5
+Limits.DozeDelay=2
+Limits.AutoRetryCount=2
+Limits.SleepStartThresholdSeconds=25
+
+; ---------- Embedded helper scripts ----------
+
+; -- Search script (writes .cf-search-results.json)
+CF_SEARCH_SCRIPT_Linux=cat > .amp_cf_search.sh << 'EOF'\n#!/usr/bin/env bash\nset -euo pipefail\ncd \"$(dirname \"$0\")\"\nQUERY=\"${1:-${CF_SearchQuery:-}}\"\nVER=\"${2:-${MCVersion:-}}\"\nLOADER=\"${3:-${ModLoader:-}}\"\n[ -z \"${QUERY}\" ] && exit 0\n: \"${CF_API_KEY:?CF_API_KEY env required}\"\nBASE=\"${CF_BASE_URL:-https://api.curseforge.com}\"\nGAME_ID=\"${CF_GAME_ID:-432}\"\nurl=\"${BASE}/v1/mods/search?gameId=${GAME_ID}&searchFilter=$(python3 - <<PY\nimport urllib.parse,sys\nprint(urllib.parse.quote(sys.argv[1]))\nPY\n\"$QUERY\")\"\n[ -n \"$VER\" ] && url+=\"&gameVersion=${VER}\"\ncase \"$LOADER\" in forge) url+=\"&modLoaderType=1\";; fabric) url+=\"&modLoaderType=4\";; neoforge) url+=\"&modLoaderType=6\";; esac\ncurl -fsSL -H \"Accept: application/json\" -H \"x-api-key: ${CF_API_KEY}\" \"$url\" \\\n | jq '{results: (.data // []) | map({name, projectId: .id, slug, latestFilesIndexes})}' \\\n > .cf-search-results.json\nprintf \"Saved search results to %s\\n\" .cf-search-results.json\nEOF\nchmod +x .amp_cf_search.sh\n./.amp_cf_search.sh \"{$CF_SearchQuery}\" \"{$MCVersion}\" \"{$ModLoader}\"
+
+CF_SEARCH_SCRIPT_Windows=powershell -NoProfile -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference='Stop'; Set-Location (Split-Path $MyInvocation.MyCommand.Path);\nif (-not $env:CF_API_KEY) { throw 'CF_API_KEY env required' }\n$BASE = if ($env:CF_BASE_URL) { $env:CF_BASE_URL } else { 'https://api.curseforge.com' }\n$QUERY='{$CF_SearchQuery}'; $VER='{$MCVersion}'; $LOADER='{$ModLoader}'; $GAME_ID = if ($env:CF_GAME_ID) { $env:CF_GAME_ID } else { '432' }\nif (-not $QUERY) { exit 0 }\n$uri = \"$BASE/v1/mods/search?gameId=$GAME_ID&searchFilter=$( [uri]::EscapeDataString($QUERY) )\";\nif ($VER) { $uri += \"&gameVersion=$VER\" }\nswitch ($LOADER) { 'forge' { $uri += '&modLoaderType=1' } 'fabric' { $uri += '&modLoaderType=4' } 'neoforge' { $uri += '&modLoaderType=6' } }\n$hdr = @{ 'Accept'='application/json'; 'x-api-key'=$env:CF_API_KEY };\n$r = Invoke-RestMethod -Uri $uri -Headers $hdr -Method GET -ErrorAction Stop;\n$r | ConvertTo-Json -Depth 6 | Out-File -Encoding utf8 \".cf-search-results.json\";\nWrite-Host 'Saved search results to .cf-search-results.json'\"
+
+
+; -- Install script (single mods lists)
+CF_INSTALL_SCRIPT_Linux=cat > .amp_cf_install.sh << 'EOF'\n#!/usr/bin/env bash\nset -euo pipefail\ncd \"$(dirname \"$0\")\"\n: \"${CF_API_KEY:?CF_API_KEY env required}\"\nBASE=\"${CF_BASE_URL:-https://api.curseforge.com}\"\nGAME_ID=\"${CF_GAME_ID:-432}\"\nVER=\"${MCVersion:-}\"\nLOADER=\"${ModLoader:-forge}\"\nMOD_IDS_CSV=\"${CF_ModProjectIDs:-}\"\nFILE_IDS_CSV=\"${CF_ModFileIDs:-}\"\nmkdir -p mods\n# Server jar note (user supplies installer/jar)\nif [ ! -f server.jar ]; then\n  case \"$LOADER\" in forge|neoforge) echo \"[Note] Place Forge/NeoForge server installer/jar in ./Minecraft.\";; fabric) echo \"[Note] Provide Fabric server launcher/jar.\";; esac\nfi\nhdr=(-H \"Accept: application/json\" -H \"x-api-key: ${CF_API_KEY}\")\nresolve_latest(){ local modId=\"$1\" url fId; url=\"${BASE}/v1/mods/${modId}/files\"; [ -n \"$VER\" ] && url+=\"?gameVersion=${VER}\"; case \"$LOADER\" in forge) url+=\"${VER:+&}modLoaderType=1\";; fabric) url+=\"${VER:+&}modLoaderType=4\";; neoforge) url+=\"${VER:+&}modLoaderType=6\";; esac; fId=$(curl -fsSL \"${url}\" \"${hdr[@]}\" | jq -r '(.data // []) | map(select(.isAvailable==true)) | max_by(.fileDate) | .id'); echo \"$fId\"; }\ndownload_file(){ local mid=\"$1\" fid=\"$2\"; local dl; dl=$(curl -fsSL \"${BASE}/v1/mods/${mid}/files/${fid}/download-url\" \"${hdr[@]}\" | jq -r '.data'); [ -n \"$dl\" ] && echo \"Downloading $mid/$fid\" && curl -fSL \"$dl\" -o \"mods/${mid}-${fid}.jar\" || echo \"Skip $mid/$fid (no URL)\"; }\nIFS=',' read -r -a mids <<< \"$MOD_IDS_CSV\"; IFS=',' read -r -a fids <<< \"$FILE_IDS_CSV\"\nif [ \"${#mids[@]}\" -gt 0 ] && [ -n \"${mids[0]}\" ]; then for m in \"${mids[@]}\"; do m=$(echo \"$m\"|tr -d ' \\t'); [ -z \"$m\" ]&&continue; fid=$(resolve_latest \"$m\"); [ -n \"$fid\" ]&&download_file \"$m\" \"$fid\"; done; fi\nif [ \"${#fids[@]}\" -gt 0 ] && [ -n \"${fids[0]}\" ]; then for pair in \"${fids[@]}\"; do pair=$(echo \"$pair\"|tr -d ' \\t'); [ -z \"$pair\" ]&&continue; mid=${pair%%:*}; fid=${pair##*:}; download_file \"$mid\" \"$fid\"; done; fi\nEOF\nchmod +x .amp_cf_install.sh\n./.amp_cf_install.sh
+
+CF_INSTALL_SCRIPT_Windows=powershell -NoProfile -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference='Stop'; Set-Location (Split-Path $MyInvocation.MyCommand.Path);\nif (-not $env:CF_API_KEY) { throw 'CF_API_KEY env required' }\n$BASE = if ($env:CF_BASE_URL) { $env:CF_BASE_URL } else { 'https://api.curseforge.com' }\n$VER='{$MCVersion}'; $LOADER='{$ModLoader}'; $MOD_IDS='{$CF_ModProjectIDs}'; $FILE_IDS='{$CF_ModFileIDs}'; New-Item -ItemType Directory -Force -Path mods | Out-Null;\nfunction Resolve-Latest([int]$modId){ $u = \"$BASE/v1/mods/$modId/files\"; if ($VER){ $u += \"?gameVersion=$VER\" } switch ($LOADER){ 'forge' { $u += if ($VER) { '&' } else { '?' } + 'modLoaderType=1' } 'fabric' { $u += if ($VER) { '&' } else { '?' } + 'modLoaderType=4' } 'neoforge' { $u += if ($VER) { '&' } else { '?' } + 'modLoaderType=6' } } $hdr=@{'Accept'='application/json';'x-api-key'=$env:CF_API_KEY}; $r=Invoke-RestMethod -Uri $u -Headers $hdr -Method GET; ($r.data | Where-Object { $_.isAvailable } | Sort-Object fileDate -Descending | Select-Object -First 1).id }\nfunction Download-File([int]$mid,[int]$fid){ $hdr=@{'Accept'='application/json';'x-api-key'=$env:CF_API_KEY}; $u=\"$BASE/v1/mods/$mid/files/$fid/download-url\"; $dl=(Invoke-RestMethod -Uri $u -Headers $hdr -Method GET).data; if ($dl){ Invoke-WebRequest -Uri $dl -OutFile (\"mods/${mid}-${fid}.jar\") }}\nif ($MOD_IDS){ $MOD_IDS.Split(',') | ForEach-Object{ $m=$_.Trim(); if ($m){ $fid=Resolve-Latest([int]$m); if ($fid){ Download-File([int]$m,[int]$fid) } } } }\nif ($FILE_IDS){ $FILE_IDS.Split(',') | ForEach-Object{ $p=$_.Trim(); if ($p){ $mid,$fid = $p.Split(':'); Download-File([int]$mid,[int]$fid) } } }\"
+
+
+; -- Modpack import script
+CF_MODPACK_SCRIPT_Linux=cat > .amp_cf_modpack.sh << 'EOF'\n#!/usr/bin/env bash\nset -euo pipefail\ncd \"$(dirname \"$0\")\"\n[ \"${CF_ModpackEnable:-false}\" != \"true\" ] && exit 0\n: \"${CF_API_KEY:?CF_API_KEY env required}\"\nBASE=\"${CF_BASE_URL:-https://api.curseforge.com}\"\nMP_URL=\"${CF_ModpackURL:-}\"\nMP_PID=\"${CF_ModpackProjectID:-}\"\nMP_FID=\"${CF_ModpackFileID:-}\"\nHDR=(-H \"Accept: application/json\" -H \"x-api-key: ${CF_API_KEY}\")\nmkdir -p mods tmp_modpack\n# 1) Get modpack zip URL\nif [ -z \"$MP_URL\" ]; then\n  [ -z \"$MP_PID\" ] || [ -z \"$MP_FID\" ] && { echo \"Modpack ProjectID and FileID required if URL not provided\"; exit 1; }\n  MP_URL=$(curl -fsSL \"${BASE}/v1/mods/${MP_PID}/files/${MP_FID}/download-url\" \"${HDR[@]}\" | jq -r '.data')\nfi\n[ -z \"$MP_URL\" ] && { echo \"Could not resolve modpack URL\"; exit 1; }\n# 2) Download and extract\ncurl -fSL \"$MP_URL\" -o modpack.zip\nunzip -o -q modpack.zip -d tmp_modpack\n# 3) Parse manifest.json (Minecraft version, modLoader(s), files[])\nMANIFEST=tmp_modpack/manifest.json\n[ ! -f \"$MANIFEST\" ] && { echo \"manifest.json not found in modpack\"; exit 1; }\nVER_MP=$(jq -r '.minecraft.version' \"$MANIFEST\")\nLOADER_MP=$(jq -r '.minecraft.modLoaders[0].id // empty' \"$MANIFEST\")\n# if UI fields empty, adopt from modpack\nMCV_UI=\"${MCVersion:-}\"\nML_UI=\"${ModLoader:-}\"\nexport MCVersion=\"${MCV_UI:-$VER_MP}\"\nif [ -z \"${ML_UI:-}\" ] && [ -n \"$LOADER_MP\" ]; then\n  case \"$LOADER_MP\" in *neoforge*) export ModLoader=neoforge;; *fabric*) export ModLoader=fabric;; *forge*) export ModLoader=forge;; esac\nfi\n# 4) Copy overrides/\nif [ -d tmp_modpack/overrides ]; then\n  rsync -a tmp_modpack/overrides/ ./\nfi\n# 5) Download each file entry\njq -c '.files[] | {projectID,fileID}' \"$MANIFEST\" | while read -r row; do\n  mid=$(echo \"$row\" | jq -r '.projectID'); fid=$(echo \"$row\" | jq -r '.fileID');\n  dl=$(curl -fsSL \"${BASE}/v1/mods/${mid}/files/${fid}/download-url\" \"${HDR[@]}\" | jq -r '.data');\n  if [ -n \"$dl\" ]; then\n    echo \"Downloading $mid/$fid\"; curl -fSL \"$dl\" -o \"mods/${mid}-${fid}.jar\" || echo \"Skip $mid/$fid\";\n  else\n    echo \"No direct URL for $mid/$fid (skipping)\"\n  fi\ndone\n# 6) Drop a hint file for subsequent stages\njq -n --arg ver \"$MCVersion\" --arg loader \"${ModLoader:-}\" '{mcVersion:$ver, loader:$loader}' > .cf-modpack-state.json\nEOF\nchmod +x .amp_cf_modpack.sh\n./.amp_cf_modpack.sh
+
+CF_MODPACK_SCRIPT_Windows=powershell -NoProfile -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference='Stop'; Set-Location (Split-Path $MyInvocation.MyCommand.Path);\nif ('{$CF_ModpackEnable}' -ne 'true') { exit 0 }\nif (-not $env:CF_API_KEY) { throw 'CF_API_KEY env required' }\n$BASE = if ($env:CF_BASE_URL) { $env:CF_BASE_URL } else { 'https://api.curseforge.com' }\n$MP_URL = '{$CF_ModpackURL}'; $MP_PID = '{$CF_ModpackProjectID}'; $MP_FID = '{$CF_ModpackFileID}';\n$hdr = @{ 'Accept'='application/json'; 'x-api-key'=$env:CF_API_KEY };\nif (-not $MP_URL) {\n  if (-not $MP_PID -or -not $MP_FID) { throw 'Provide Modpack URL or ProjectID+FileID' }\n  $MP_URL = (Invoke-RestMethod -Uri \"$BASE/v1/mods/$MP_PID/files/$MP_FID/download-url\" -Headers $hdr -Method GET).data\n}\nInvoke-WebRequest -Uri $MP_URL -OutFile 'modpack.zip' | Out-Null\nNew-Item -ItemType Directory -Force -Path 'tmp_modpack' | Out-Null\nAdd-Type -AssemblyName System.IO.Compression.FileSystem\n[System.IO.Compression.ZipFile]::ExtractToDirectory(\"modpack.zip\",\"tmp_modpack\",$true)\n$manifestPath = Join-Path 'tmp_modpack' 'manifest.json'\nif (-not (Test-Path $manifestPath)) { throw 'manifest.json not found in modpack' }\n$man = Get-Content $manifestPath -Raw | ConvertFrom-Json\n$verMP = $man.minecraft.version\n$loaderMP = if ($man.minecraft.modLoaders.Count -gt 0) { $man.minecraft.modLoaders[0].id } else { $null }\nif (-not '{$MCVersion}') { $env:MCVersion = $verMP }\nswitch -Regex ($loaderMP) { 'neoforge' { if (-not '{$ModLoader}') { $env:ModLoader='neoforge' } } 'fabric' { if (-not '{$ModLoader}') { $env:ModLoader='fabric' } } 'forge' { if (-not '{$ModLoader}') { $env:ModLoader='forge' } } }\nif (Test-Path 'tmp_modpack/overrides') { Copy-Item 'tmp_modpack/overrides/*' -Destination . -Recurse -Force }\nNew-Item -ItemType Directory -Force -Path 'mods' | Out-Null\nforeach ($f in $man.files) {\n  $mid = [int]$f.projectID; $fid = [int]$f.fileID\n  $dl = (Invoke-RestMethod -Uri \"$BASE/v1/mods/$mid/files/$fid/download-url\" -Headers $hdr -Method GET -ErrorAction SilentlyContinue).data\n  if ($dl) { Invoke-WebRequest -Uri $dl -OutFile (\"mods/${mid}-${fid}.jar\") | Out-Null }\n}\n@{ mcVersion = if ('{$MCVersion}') {'{$MCVersion}'} else { $env:MCVersion }; loader = if ('{$ModLoader}') {'{$ModLoader}'} else { $env:ModLoader } } | ConvertTo-Json | Out-File -Encoding utf8 '.cf-modpack-state.json'\"
+
+
+; Cross-platform selectors
+CF_SEARCH_SCRIPT={$Platform:Linux?$CF_SEARCH_SCRIPT_Linux:$CF_SEARCH_SCRIPT_Windows}
+CF_INSTALL_SCRIPT={$Platform:Linux?$CF_INSTALL_SCRIPT_Linux:$CF_INSTALL_SCRIPT_Windows}
+CF_MODPACK_SCRIPT={$Platform:Linux?$CF_MODPACK_SCRIPT_Linux:$CF_MODPACK_SCRIPT_Windows}
