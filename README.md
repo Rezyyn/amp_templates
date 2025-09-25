@@ -1,3 +1,6 @@
+############################## NOT MINE JUST TESTING REAL AUTHOR: https://github.com/crameep/amp-cf-updater# #########################################
+
+
 
 # AMP Generic Template: Minecraft (CurseForge Auto-Update)
 
